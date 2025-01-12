@@ -33,7 +33,19 @@ export const Title = styled.Text`
     type === "PRIMARY" ? theme.COLORS.WHITE : theme.COLORS.GRAY_200};
 `;
 
-export const Icon = styled(Plus).attrs({ size: 18 })`
+export const IconAdd = styled(Plus).attrs({ size: 18 })`
+  color: ${({ type }: Props) =>
+    type === "PRIMARY" ? theme.COLORS.WHITE : theme.COLORS.GRAY_200};
+  margin-right: 12px;
+`;
+
+export const IconEdit = styled(PencilSimpleLine).attrs({ size: 18 })`
+  color: ${({ type }: Props) =>
+    type === "PRIMARY" ? theme.COLORS.WHITE : theme.COLORS.GRAY_200};
+  margin-right: 12px;
+`;
+
+export const IconDelete = styled(Trash).attrs({ size: 18 })`
   color: ${({ type }: Props) =>
     type === "PRIMARY" ? theme.COLORS.WHITE : theme.COLORS.GRAY_200};
   margin-right: 12px;

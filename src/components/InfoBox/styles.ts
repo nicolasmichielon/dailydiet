@@ -25,9 +25,7 @@ export const Subtitle = styled.Text`
   font-family: ${theme.FONT_FAMILY.REGULAR};
 `;
 
-export const Icon = styled(ArrowUpRight)`
-  height: 24px;
-  width: 24px;
+export const Icon = styled(ArrowUpRight).attrs({ size: 24 })`
   color: ${theme.COLORS.GREEN_DARK};
   position: absolute;
   right: 8px;

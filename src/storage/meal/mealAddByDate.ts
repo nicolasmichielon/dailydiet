@@ -10,7 +10,7 @@ export async function mealAddByDate(newMeal: MealStorageDTO, date: string) {
   try {
     const allDates = await datesGetAll();
     if (!allDates.includes(date)) {
-      dateCreate(date);
+      await dateCreate(date);
     }
 
     const storedMeals = await mealsGetByDate(date);
@@ -20,7 +20,6 @@ export async function mealAddByDate(newMeal: MealStorageDTO, date: string) {
     const storage = JSON.stringify([...storedMeals, newMeal]);
 
     await AsyncStorage.setItem(`${MEAL_COLLECTION}-${date}`, storage);
-    console.log(`Meal added: ${newMeal.name}`);
   } catch (error) {
     throw error;
   }

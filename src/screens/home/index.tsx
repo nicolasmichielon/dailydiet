@@ -1,7 +1,7 @@
 import { Container } from "./styles";
 import { datesGetAll } from "@storage/date/datesGetAll";
 
-import { FlatList, Alert } from "react-native";
+import { FlatList, Alert, View } from "react-native";
 
 import { HomeHeader } from "@components/HomeHeader";
 import { InfoBox } from "@components/InfoBox";
@@ -13,6 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { mealsGetByDate } from "@storage/meal/mealsGetByDate";
 import React from "react";
+import { Loading } from "@components/Loading";
 
 type Props = {
   name: string;
@@ -23,6 +24,7 @@ type Props = {
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [loadNow, setLoadNow] = useState(false);
   const [dates, setDates] = useState<string[]>([]);
   const [mealsByDate, setMealsByDate] = useState<{ [key: string]: Props[] }>(
     {}
@@ -57,15 +59,16 @@ export function Home() {
   }
 
   function fetchAllMeals() {
+    setIsLoading(true);
     dates.forEach((date) => {
       console.log(`Date in focus effect: ${date}`);
       fetchMealsByDate(date);
     });
+    setIsLoading(false);
   }
 
   async function fetchMealsByDate(date: string) {
     try {
-      setIsLoading(true);
       const meals = await mealsGetByDate(date);
       meals.sort((a, b) => a.time.localeCompare(b.time)); // Sort meals by time
       await setMealsByDate((prev) => ({ ...prev, [date]: meals }));
@@ -76,8 +79,6 @@ export function Home() {
         "Refeições",
         "Não foi possível carregar as refeições de uma das datas"
       );
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -87,9 +88,11 @@ export function Home() {
     }, [])
   );
 
-  useEffect(() => {
-    fetchAllMeals();
-  }, [dates]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllMeals();
+    }, [dates])
+  );
 
   return (
     <Container>
@@ -102,25 +105,37 @@ export function Home() {
         type="PRIMARY"
         onPress={handleNewMeal}
       />
-      {dates.map((date) => (
+      {isLoading ? (
+        <Loading />
+      ) : (
         <FlatList
-          key={date}
-          data={mealsByDate[date] || []}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <Meal
-              timeText={item.time}
-              mealName={item.name}
-              isInDiet={item.isInDiet}
+          data={dates}
+          keyExtractor={(item) => item}
+          renderItem={({ item: date }) => (
+            <FlatList
+              data={mealsByDate[date] || []}
+              keyExtractor={(item) => item.name}
+              renderItem={({ item }) => (
+                <Meal
+                  timeText={item.time}
+                  mealName={item.name}
+                  isInDiet={item.isInDiet}
+                />
+              )}
+              contentContainerStyle={{ gap: 8 }}
+              ListHeaderComponent={<ListHeader text={date} />}
+              ItemSeparatorComponent={() => (
+                <View style={{ marginBottom: 8 }} />
+              )}
+              scrollEnabled={false}
+              windowSize={30}
+              style={{ flexGrow: 0 }}
             />
           )}
-          contentContainerStyle={{ gap: 8 }}
-          ListHeaderComponent={<ListHeader text={date} />}
-          scrollEnabled={false}
-          windowSize={30}
-          style={{ flexGrow: 0 }}
+          showsVerticalScrollIndicator={false}
+          overScrollMode="never"
         />
-      ))}
+      )}
     </Container>
   );
 }

@@ -54,7 +54,7 @@ export function NewMeal() {
         <Button
           title="Cadastrar Refeição"
           style={{ position: "absolute", marginInline: 24, bottom: 40 }}
-          onPress={() => {
+          onPress={async () => {
             if (
               isInDiet != undefined &&
               name.length > 0 &&
@@ -62,8 +62,7 @@ export function NewMeal() {
               date.length > 0 &&
               time.length > 0
             ) {
-              dateCreate(date);
-              mealAddByDate(
+              await mealAddByDate(
                 { name: name, isInDiet: isInDiet, date: date, time: time },
                 date
               );

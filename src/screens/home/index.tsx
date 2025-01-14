@@ -14,6 +14,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { mealsGetByDate } from "@storage/meal/mealsGetByDate";
 import React from "react";
 import { Loading } from "@components/Loading";
+import { mealsGetAll } from "@storage/meal/mealsGetAll";
 
 type Props = {
   name: string;
@@ -24,11 +25,11 @@ type Props = {
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadNow, setLoadNow] = useState(false);
   const [dates, setDates] = useState<string[]>([]);
   const [mealsByDate, setMealsByDate] = useState<{ [key: string]: Props[] }>(
     {}
   );
+  const [percentage, setPercentage] = useState(0);
 
   const navigation = useNavigation();
 
@@ -58,28 +59,40 @@ export function Home() {
     }
   }
 
-  function fetchAllMeals() {
-    setIsLoading(true);
-    dates.forEach((date) => {
-      console.log(`Date in focus effect: ${date}`);
-      fetchMealsByDate(date);
-    });
-    setIsLoading(false);
-  }
-
-  async function fetchMealsByDate(date: string) {
+  async function fetchAllMeals() {
     try {
-      const meals = await mealsGetByDate(date);
-      meals.sort((a, b) => a.time.localeCompare(b.time)); // Sort meals by time
-      await setMealsByDate((prev) => ({ ...prev, [date]: meals }));
-      console.log(`Meals fectched by date: ${meals}`);
+      setIsLoading(true);
+      const allMeals = await mealsGetAll();
+      const mealsByDate = (allMeals || []).reduce((acc, meal) => {
+        const { date } = meal;
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(meal);
+        return acc;
+      }, {} as { [key: string]: Props[] });
+
+      for (const date in mealsByDate) {
+        mealsByDate[date].sort((a, b) => a.time.localeCompare(b.time)); // Sort meals by time
+      }
+
+      setMealsByDate(mealsByDate);
+      console.log(`All meals fetched: ${JSON.stringify(mealsByDate)}`);
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        "Refeições",
-        "Não foi possível carregar as refeições de uma das datas"
-      );
+      Alert.alert("Refeições", "Não foi possível carregar todas as refeições");
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  function calculatePercentage() {
+    const allMeals = Object.values(mealsByDate).flat();
+    const dietMeals = allMeals.filter((meal) => meal.isInDiet);
+    const percentage = allMeals.length
+      ? (dietMeals.length / allMeals.length) * 100
+      : 0;
+    setPercentage(percentage);
   }
 
   useFocusEffect(
@@ -94,10 +107,14 @@ export function Home() {
     }, [dates])
   );
 
+  useEffect(() => {
+    calculatePercentage();
+  }, [mealsByDate]);
+
   return (
     <Container>
       <HomeHeader />
-      <InfoBox />
+      <InfoBox percentage={`${percentage.toFixed(2).replace(".", ",")}%`} />
       <Button
         title="Nova refeição"
         textAbove="Refeições"

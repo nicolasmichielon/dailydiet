@@ -1,9 +1,13 @@
 import { Container, Title, Subtitle, Icon } from "./styles";
 
-export function InfoBox() {
+type Props = {
+  percentage: string;
+};
+
+export function InfoBox({ percentage }: Props) {
   return (
     <Container>
-      <Title>90,86%</Title>
+      <Title>{percentage}</Title>
       <Subtitle>das refeições dentro da dieta</Subtitle>
       <Icon />
     </Container>

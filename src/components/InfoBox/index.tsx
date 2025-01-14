@@ -1,15 +1,22 @@
-import { Container, Title, Subtitle, Icon } from "./styles";
+import {
+  Container,
+  Title,
+  Subtitle,
+  Icon,
+  InfoBoxTypeStyleProps,
+} from "./styles";
 
 type Props = {
   percentage: string;
+  type: InfoBoxTypeStyleProps;
 };
 
-export function InfoBox({ percentage }: Props) {
+export function InfoBox({ percentage, type = "PRIMARY" }: Props) {
   return (
-    <Container>
+    <Container type={type}>
       <Title>{percentage}</Title>
       <Subtitle>das refeições dentro da dieta</Subtitle>
-      <Icon />
+      <Icon type={type} />
     </Container>
   );
 }

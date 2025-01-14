@@ -2,11 +2,18 @@ import styled from "styled-components/native";
 import theme from "src/theme";
 import { ArrowUpRight } from "phosphor-react-native";
 
+export type InfoBoxTypeStyleProps = "PRIMARY" | "SECONDARY";
+
+type Props = {
+  type: InfoBoxTypeStyleProps;
+};
+
 export const Container = styled.View`
   width: 100%;
   height: 102px;
   border-radius: 8px;
-  background-color: ${theme.COLORS.GREEN_LIGHT};
+  background-color: ${({ type }: Props) =>
+    type === "PRIMARY" ? theme.COLORS.GREEN_LIGHT : theme.COLORS.RED_LIGHT};
   justify-content: center;
   align-items: center;
   margin-top: 28px;
@@ -26,7 +33,8 @@ export const Subtitle = styled.Text`
 `;
 
 export const Icon = styled(ArrowUpRight).attrs({ size: 24 })`
-  color: ${theme.COLORS.GREEN_DARK};
+  color: ${({ type }: Props) =>
+    type === "PRIMARY" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK};
   position: absolute;
   right: 8px;
   top: 8px;

@@ -114,7 +114,10 @@ export function Home() {
   return (
     <Container>
       <HomeHeader />
-      <InfoBox percentage={`${percentage.toFixed(2).replace(".", ",")}%`} />
+      <InfoBox
+        percentage={`${percentage.toFixed(2).replace(".", ",")}%`}
+        type={percentage > 60 ? "PRIMARY" : "SECONDARY"}
+      />
       <Button
         title="Nova refeição"
         textAbove="Refeições"
@@ -139,7 +142,6 @@ export function Home() {
                   isInDiet={item.isInDiet}
                 />
               )}
-              contentContainerStyle={{ gap: 8 }}
               ListHeaderComponent={<ListHeader text={date} />}
               ItemSeparatorComponent={() => (
                 <View style={{ marginBottom: 8 }} />
@@ -149,8 +151,10 @@ export function Home() {
               style={{ flexGrow: 0 }}
             />
           )}
+          ItemSeparatorComponent={() => <View style={{ marginBottom: 32 }} />}
           showsVerticalScrollIndicator={false}
           overScrollMode="never"
+          style={{ marginTop: 32 }}
         />
       )}
     </Container>

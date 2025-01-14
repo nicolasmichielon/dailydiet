@@ -1,63 +1,116 @@
 import { Container } from "./styles";
+import { datesGetAll } from "@storage/date/datesGetAll";
 
-import { FlatList } from "react-native";
+import { FlatList, Alert } from "react-native";
 
 import { HomeHeader } from "@components/HomeHeader";
 import { InfoBox } from "@components/InfoBox";
-import { Button } from "@components/Button/Index";
+import { Button } from "@components/Button";
 import { Meal } from "@components/Meal";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ListHeader } from "@components/ListHeader";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
+import { mealsGetByDate } from "@storage/meal/mealsGetByDate";
+import React from "react";
 
 type Props = {
-  meal: {
-    name: string;
-    time: string;
-    isInDiet: boolean;
-  };
+  name: string;
+  time: string;
+  date: string;
+  isInDiet: boolean;
 };
 
 export function Home() {
-  const [meals, setMeals] = useState<Props[]>([
-    {
-      meal: {
-        name: "Breakfast",
-        time: "08:00",
-        isInDiet: true,
-      },
-    },
-    {
-      meal: { name: "Lunch", time: "12:00", isInDiet: false },
-    },
-    {
-      meal: { name: "Dinner", time: "19:00", isInDiet: true },
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dates, setDates] = useState<string[]>([]);
+  const [mealsByDate, setMealsByDate] = useState<{ [key: string]: Props[] }>(
+    {}
+  );
+
+  const navigation = useNavigation();
+
+  function handleNewMeal() {
+    navigation.navigate("new");
+  }
+
+  async function fetchDates() {
+    try {
+      setIsLoading(true);
+      const data = await datesGetAll();
+      data.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.split(".").map(Number);
+        const [dayB, monthB, yearB] = b.split(".").map(Number);
+        return (
+          new Date(yearB, monthB - 1, dayB).getTime() -
+          new Date(yearA, monthA - 1, dayA).getTime()
+        );
+      }); // Sort dates in reverse chronological order
+      await setDates(data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Datas", "Não foi possível carregar as datas");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchMealsByDate(date: string) {
+    try {
+      setIsLoading(true);
+      const meals = await mealsGetByDate(date);
+      meals.sort((a, b) => a.time.localeCompare(b.time)); // Sort meals by time
+      await setMealsByDate((prev) => ({ ...prev, [date]: meals }));
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        "Refeições",
+        "Não foi possível carregar as refeições de uma das datas"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDates();
+      dates.forEach((date) => {
+        fetchMealsByDate(date);
+      });
+    }, [])
+  );
 
   return (
     <Container>
       <HomeHeader />
       <InfoBox />
-
       <Button
         title="Nova refeição"
         textAbove="Refeições"
         icon="ADD"
         type="PRIMARY"
+        onPress={handleNewMeal}
       />
-      <FlatList
-        data={meals}
-        keyExtractor={(item) => item.meal.time}
-        renderItem={({ item }) => (
-          <Meal
-            timeText={item.meal.time}
-            mealName={item.meal.name}
-            isInDiet={item.meal.isInDiet}
-          />
-        )}
-        contentContainerStyle={{ gap: 8 }}
-        ListHeaderComponent={<ListHeader text="12.08.22" />}
-      />
+      {dates.map((date) => (
+        <FlatList
+          key={date}
+          data={mealsByDate[date] || []}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <Meal
+              timeText={item.time}
+              mealName={item.name}
+              isInDiet={item.isInDiet}
+            />
+          )}
+          contentContainerStyle={{ gap: 8 }}
+          ListHeaderComponent={<ListHeader text={date} />}
+          scrollEnabled={false}
+          windowSize={30}
+          style={{ flexGrow: 0 }}
+        />
+      ))}
     </Container>
   );
 }

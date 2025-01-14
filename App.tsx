@@ -1,4 +1,5 @@
 import { StatusBar } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import {
   useFonts,
   NunitoSans_400Regular,
@@ -9,6 +10,8 @@ import theme from "./src/theme";
 
 import { Home } from "@screens/home";
 import { Loading } from "@components/Loading";
+import { NewMeal } from "@screens/newMeal";
+import { Routes } from "src/routes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ NunitoSans_700Bold, NunitoSans_400Regular });
@@ -16,11 +19,11 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar
-        barStyle="light-content"
+        barStyle="dark-content"
         backgroundColor="transparent"
         translucent
       />
-      {fontsLoaded ? <Home /> : <Loading />}
+      {fontsLoaded ? <Routes /> : <Loading />}
     </ThemeProvider>
   );
 }

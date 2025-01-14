@@ -7,7 +7,7 @@ export async function datesGetAll() {
     const storage = await AsyncStorage.getItem(DATE_COLLECTION);
 
     const dates: string[] = storage ? JSON.parse(storage) : [];
-
+    console.log(`Dates collection: ${dates}`);
     return dates;
   } catch (error) {
     throw error;

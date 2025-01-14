@@ -46,6 +46,7 @@ export function Home() {
           new Date(yearA, monthA - 1, dayA).getTime()
         );
       }); // Sort dates in reverse chronological order
+      console.log(`Dates fetched: ${data}`);
       await setDates(data);
     } catch (error) {
       console.log(error);
@@ -55,12 +56,20 @@ export function Home() {
     }
   }
 
+  function fetchAllMeals() {
+    dates.forEach((date) => {
+      console.log(`Date in focus effect: ${date}`);
+      fetchMealsByDate(date);
+    });
+  }
+
   async function fetchMealsByDate(date: string) {
     try {
       setIsLoading(true);
       const meals = await mealsGetByDate(date);
       meals.sort((a, b) => a.time.localeCompare(b.time)); // Sort meals by time
       await setMealsByDate((prev) => ({ ...prev, [date]: meals }));
+      console.log(`Meals fectched by date: ${meals}`);
     } catch (error) {
       console.log(error);
       Alert.alert(
@@ -75,11 +84,12 @@ export function Home() {
   useFocusEffect(
     useCallback(() => {
       fetchDates();
-      dates.forEach((date) => {
-        fetchMealsByDate(date);
-      });
     }, [])
   );
+
+  useEffect(() => {
+    fetchAllMeals();
+  }, [dates]);
 
   return (
     <Container>

@@ -115,8 +115,8 @@ export function Home() {
     <Container>
       <HomeHeader />
       <InfoBox
-        percentage={`${percentage.toFixed(2).replace(".", ",")}%`}
-        type={percentage > 60 ? "PRIMARY" : "SECONDARY"}
+        percentage={percentage}
+        type={percentage > 60 || percentage === 0 ? "PRIMARY" : "SECONDARY"}
       />
       <Button
         title="Nova refeição"

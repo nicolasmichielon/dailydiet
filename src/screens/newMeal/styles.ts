@@ -10,7 +10,7 @@ export const Container = styled(SafeAreaView)`
 export const Form = styled.View`
   background-color: ${theme.COLORS.WHITE};
   flex: 1;
-  border-radius: 20px;
+  border-radius: 20px 20px 0px 0px;
   padding: 24px;
   padding-top: 40px;
 `;

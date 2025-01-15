@@ -95,6 +95,13 @@ export function Home() {
     setPercentage(percentage);
   }
 
+  async function handleGoToStatistics() {
+    navigation.navigate("statistics", {
+      meals: await mealsGetAll(),
+      percentage: percentage,
+    });
+  }
+
   useFocusEffect(
     useCallback(() => {
       fetchDates();
@@ -117,6 +124,7 @@ export function Home() {
       <InfoBox
         percentage={percentage}
         type={percentage > 60 || percentage === 0 ? "PRIMARY" : "SECONDARY"}
+        onPress={handleGoToStatistics}
       />
       <Button
         title="Nova refeição"

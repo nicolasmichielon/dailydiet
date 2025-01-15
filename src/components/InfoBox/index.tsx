@@ -6,14 +6,16 @@ import {
   InfoBoxTypeStyleProps,
 } from "./styles";
 
-type Props = {
+import { TouchableOpacityProps } from "react-native";
+
+type Props = TouchableOpacityProps & {
   percentage: number;
   type: InfoBoxTypeStyleProps;
 };
 
-export function InfoBox({ percentage, type = "PRIMARY" }: Props) {
+export function InfoBox({ percentage, type = "PRIMARY", ...rest }: Props) {
   return (
-    <Container type={type}>
+    <Container {...rest} type={type}>
       <Title>
         {percentage > 0
           ? `${percentage.toFixed(2).replace(".", ",")}%`

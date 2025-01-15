@@ -91,7 +91,7 @@ export function Home() {
     const dietMeals = allMeals.filter((meal) => meal.isInDiet);
     const percentage = allMeals.length
       ? (dietMeals.length / allMeals.length) * 100
-      : 0;
+      : 100;
     setPercentage(percentage);
   }
 
@@ -123,7 +123,7 @@ export function Home() {
       <HomeHeader />
       <InfoBox
         percentage={percentage}
-        type={percentage > 60 || percentage === 0 ? "PRIMARY" : "SECONDARY"}
+        type={percentage > 60 ? "PRIMARY" : "SECONDARY"}
         onPress={handleGoToStatistics}
       />
       <Button

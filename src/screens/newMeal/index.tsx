@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { Container, Form, Row, Title } from "./styles";
 
@@ -9,7 +9,6 @@ import { Button } from "@components/Button";
 
 import { mealAddByDate } from "@storage/meal/mealAddByDate";
 import { Alert } from "react-native";
-import { dateCreate } from "@storage/date/dateCreate";
 import { useNavigation } from "@react-navigation/native";
 
 export function NewMeal() {
@@ -20,6 +19,17 @@ export function NewMeal() {
   const [date, setDate] = useState<string>("");
 
   const navigation = useNavigation();
+  const descriptionInputRef = useRef<any>(null);
+
+  const validateDate = (date: string) => {
+    const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+    return dateRegex.test(date);
+  };
+
+  const validateTime = (time: string) => {
+    const timeRegex = /^\d{2}:\d{2}$/;
+    return timeRegex.test(time);
+  };
 
   useEffect(() => {
     console.log("isInDiet updated:", isInDiet);
@@ -27,13 +37,39 @@ export function NewMeal() {
 
   return (
     <Container>
-      <Header />
+      <Header
+        text="Nova Refeição"
+        icon="GoBack"
+        onPress={() => navigation.navigate("home")}
+      />
       <Form>
-        <Input type="DEFAULT" text="Nome" onChangeText={setName} />
-        <Input type="LARGE" text="Descrição" onChangeText={setDescription} />
+        <Input
+          type="DEFAULT"
+          text="Nome"
+          onChangeText={setName}
+          onSubmitEditing={() => descriptionInputRef.current?.focus()}
+          placeholder="Ex: Café da manhã"
+        />
+        <Input
+          type="LARGE"
+          text="Descrição"
+          onChangeText={setDescription}
+          inputRef={descriptionInputRef}
+          placeholder="Ex: Pão com manteiga e café"
+        />
         <Row>
-          <Input type="SMALL" text="Data" onChangeText={setDate} />
-          <Input type="SMALL" text="Hora" onChangeText={setTime} />
+          <Input
+            type="SMALL"
+            text="Data"
+            onChangeText={setDate}
+            placeholder="15.01.2025"
+          />
+          <Input
+            type="SMALL"
+            text="Hora"
+            onChangeText={setTime}
+            placeholder="14:00"
+          />
         </Row>
         <Title>Está dentro da dieta?</Title>
         <Row>
@@ -59,8 +95,8 @@ export function NewMeal() {
               isInDiet != undefined &&
               name.length > 0 &&
               description.length > 0 &&
-              date.length > 0 &&
-              time.length > 0
+              validateDate(date) &&
+              validateTime(time)
             ) {
               await mealAddByDate(
                 { name: name, isInDiet: isInDiet, date: date, time: time },
@@ -70,7 +106,7 @@ export function NewMeal() {
             } else {
               Alert.alert(
                 "Campo inválido",
-                "Todos os campos devem ser preenchidos"
+                "Todos os campos devem ser preenchidos corretamente"
               );
             }
           }}

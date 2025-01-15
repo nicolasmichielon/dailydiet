@@ -11,6 +11,7 @@ import {
   Row,
   DashBoxTitle,
 } from "./styles";
+import { GoBackButton } from "@components/GoBackButton";
 
 type RouteParams = {
   percentage: number;
@@ -19,9 +20,9 @@ type RouteParams = {
 };
 
 export function Statistics() {
-  const navigation = useNavigation();
   const route = useRoute();
-  const { percentage, type, meals } = route.params as RouteParams;
+  const navigation = useNavigation();
+  const { percentage, meals } = route.params as RouteParams;
 
   const allMeals = Object.values(meals).flat();
   const dietMealsCount = allMeals.filter((meal: any) => meal.isInDiet).length;
@@ -57,6 +58,10 @@ export function Statistics() {
     <Container
       type={percentage > 60 || percentage === 0 ? "PRIMARY" : "SECONDARY"}
     >
+      <GoBackButton
+        style={{ top: 56 }}
+        onPress={() => navigation.navigate("home")}
+      />
       <InfoContainer>
         <Title>
           {percentage > 0

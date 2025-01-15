@@ -39,7 +39,7 @@ export const InfoContainer = styled.View`
   align-items: center;
   flex-direction: column;
   margin-top: 28px;
-  margin-bottom: 40px;
+  margin-bottom: 18px;
 `;
 
 export const Title = styled.Text`

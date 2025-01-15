@@ -12,11 +12,13 @@ export const Container = styled.View`
   width: ${({ type }: Props) => (type === "SMALL" ? 47 : 100)}%;
 `;
 
-export const TextInputField = styled(TextInput).attrs({
-  multiline: true,
-  textAlignVertical: "top",
+export const TextInputField = styled(TextInput).attrs((props: Props) => ({
+  multiline: props.type === "LARGE",
+  textAlignVertical: props.type === "LARGE" ? "top" : "center",
   autoCorrect: false,
-})`
+  returnKeyType: "done",
+  numberOfLines: 4,
+}))`
   height: ${({ type }: Props) => (type === "LARGE" ? 120 : 48)}px;
   font-size: ${theme.FONT_SIZE.MD}px;
   color: ${theme.COLORS.GRAY_100};

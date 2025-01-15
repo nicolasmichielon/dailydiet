@@ -1,9 +1,20 @@
+import React from "react";
 import { Container, Title } from "./styles";
+import { GoBackButton } from "@components/GoBackButton";
 
-export function Header() {
+type HeaderIconTypeProps = "GoBack";
+
+type Props = {
+  text: string;
+  icon: HeaderIconTypeProps;
+  onPress: () => void;
+};
+
+export function Header({ text, icon, onPress }: Props) {
   return (
     <Container>
-      <Title>Nova refeição</Title>
+      {icon === "GoBack" ? <GoBackButton onPress={onPress} /> : <></>}
+      <Title>{text}</Title>
     </Container>
   );
 }

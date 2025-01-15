@@ -122,7 +122,13 @@ export function NewMeal() {
                   validateTime(time)
                 ) {
                   await mealAddByDate(
-                    { name: name, isInDiet: isInDiet, date: date, time: time },
+                    {
+                      name: name,
+                      isInDiet: isInDiet,
+                      date: date,
+                      time: time,
+                      description: description,
+                    },
                     date
                   );
                   navigation.navigate("feedback", { isInDiet: isInDiet });

@@ -148,6 +148,9 @@ export function Home() {
                   timeText={item.time}
                   mealName={item.name}
                   isInDiet={item.isInDiet}
+                  onPress={() =>
+                    navigation.navigate("mealinfo", { meal: item })
+                  }
                 />
               )}
               ListHeaderComponent={<ListHeader text={date} />}

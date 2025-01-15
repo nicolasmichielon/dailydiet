@@ -1,3 +1,5 @@
+import { MealStorageDTO } from "@storage/meal/mealStorageDTO";
+
 export declare global {
   namespace ReactNavigation {
     interface RootParamList {
@@ -9,6 +11,9 @@ export declare global {
       };
       feedback: {
         isInDiet: boolean;
+      };
+      mealinfo: {
+        meal: {};
       };
     }
   }

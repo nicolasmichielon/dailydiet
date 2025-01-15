@@ -1,8 +1,19 @@
 import theme from "src/theme";
 import styled from "styled-components/native";
 
+export type HeaderTypeStyleProps = "PRIMARY" | "SECONDARY" | "NEUTRAL";
+
+type Props = {
+  type: HeaderTypeStyleProps;
+};
+
 export const Container = styled.View`
-  background-color: ${theme.COLORS.GRAY_500};
+  background-color: ${({ type }: Props) =>
+    type === "PRIMARY"
+      ? theme.COLORS.GREEN_LIGHT
+      : type === "SECONDARY"
+      ? theme.COLORS.RED_LIGHT
+      : theme.COLORS.GRAY_500};
   height: 104px;
 
   justify-content: center;

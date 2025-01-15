@@ -6,7 +6,7 @@ type Props = {
   isInDiet: boolean;
 };
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity`
   height: 50px;
   width: 100%;
 

@@ -7,6 +7,9 @@ export declare global {
         meals;
         percentage: number;
       };
+      feedback: {
+        isInDiet: boolean;
+      };
     }
   }
 }

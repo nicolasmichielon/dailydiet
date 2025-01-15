@@ -33,9 +33,7 @@ export function NewMeal() {
     return timeRegex.test(time);
   };
 
-  useEffect(() => {
-    console.log("isInDiet updated:", isInDiet);
-  }, [isInDiet]);
+  useEffect(() => {}, [isInDiet]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -127,7 +125,7 @@ export function NewMeal() {
                     { name: name, isInDiet: isInDiet, date: date, time: time },
                     date
                   );
-                  navigation.navigate("home");
+                  navigation.navigate("feedback", { isInDiet: isInDiet });
                 } else {
                   Alert.alert(
                     "Campo inválido",

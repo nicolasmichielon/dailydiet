@@ -33,6 +33,33 @@ export function NewMeal() {
     return timeRegex.test(time);
   };
 
+  async function handleCreateMeal() {
+    if (
+      isInDiet != undefined &&
+      name.length > 0 &&
+      description.length > 0 &&
+      validateDate(date) &&
+      validateTime(time)
+    ) {
+      await mealAddByDate(
+        {
+          name: name,
+          isInDiet: isInDiet,
+          date: date,
+          time: time,
+          description: description,
+        },
+        date
+      );
+      navigation.navigate("feedback", { isInDiet: isInDiet });
+    } else {
+      Alert.alert(
+        "Campo inválido",
+        "Todos os campos devem ser preenchidos corretamente"
+      );
+    }
+  }
+
   useEffect(() => {}, [isInDiet]);
 
   useEffect(() => {
@@ -113,32 +140,7 @@ export function NewMeal() {
             <Button
               title="Cadastrar Refeição"
               style={{ marginTop: isKeyboardVisible ? 30 : 150 }}
-              onPress={async () => {
-                if (
-                  isInDiet != undefined &&
-                  name.length > 0 &&
-                  description.length > 0 &&
-                  validateDate(date) &&
-                  validateTime(time)
-                ) {
-                  await mealAddByDate(
-                    {
-                      name: name,
-                      isInDiet: isInDiet,
-                      date: date,
-                      time: time,
-                      description: description,
-                    },
-                    date
-                  );
-                  navigation.navigate("feedback", { isInDiet: isInDiet });
-                } else {
-                  Alert.alert(
-                    "Campo inválido",
-                    "Todos os campos devem ser preenchidos corretamente"
-                  );
-                }
-              }}
+              onPress={handleCreateMeal}
             />
           </Form>
         </Container>

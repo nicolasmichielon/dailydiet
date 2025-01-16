@@ -47,3 +47,9 @@ export const Subtitle = styled.Text`
 
   margin-bottom: 24px;
 `;
+
+export const ButtonsContainer = styled.View`
+  gap: 8px;
+
+  margin-top: 350px;
+`;

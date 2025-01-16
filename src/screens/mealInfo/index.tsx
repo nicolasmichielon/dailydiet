@@ -9,6 +9,7 @@ import {
   Subtitle,
   Title,
   SecondTitle,
+  ButtonsContainer,
 } from "./styles";
 import { Pill } from "@components/Pill";
 import { Button } from "@components/Button";
@@ -40,6 +41,11 @@ export function MealInfo() {
           type={meal.isInDiet ? "PRIMARY" : "SECONDARY"}
           text={meal.isInDiet ? "dentro da dieta" : "fora da dieta"}
         />
+
+        <ButtonsContainer>
+          <Button title="Editar refeição" icon="EDIT" />
+          <Button title="Excluir refeição" icon="DELETE" type="SECONDARY" />
+        </ButtonsContainer>
       </InfoBackground>
     </Container>
   );

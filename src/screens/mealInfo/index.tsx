@@ -13,6 +13,7 @@ import {
 } from "./styles";
 import { Pill } from "@components/Pill";
 import { Button } from "@components/Button";
+import { mealRemoveByDate } from "@storage/meal/mealRemoveByDate";
 
 type RouteParams = {
   meal: MealStorageDTO;
@@ -22,6 +23,11 @@ export function MealInfo() {
   const route = useRoute();
   const navigation = useNavigation();
   const { meal } = route.params as RouteParams;
+
+  async function handleRemoveMeal() {
+    await mealRemoveByDate(meal.name, meal.date);
+    navigation.navigate("home");
+  }
 
   return (
     <Container type={meal.isInDiet ? "PRIMARY" : "SECONDARY"}>
@@ -44,7 +50,12 @@ export function MealInfo() {
 
         <ButtonsContainer>
           <Button title="Editar refeição" icon="EDIT" />
-          <Button title="Excluir refeição" icon="DELETE" type="SECONDARY" />
+          <Button
+            title="Excluir refeição"
+            icon="DELETE"
+            type="SECONDARY"
+            onPress={handleRemoveMeal}
+          />
         </ButtonsContainer>
       </InfoBackground>
     </Container>

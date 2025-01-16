@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { ListHeader } from "@components/ListHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
-import { mealsGetByDate } from "@storage/meal/mealsGetByDate";
 import React from "react";
 import { Loading } from "@components/Loading";
 import { mealsGetAll } from "@storage/meal/mealsGetAll";
@@ -54,14 +53,11 @@ export function Home() {
     } catch (error) {
       console.log(error);
       Alert.alert("Datas", "Não foi possível carregar as datas");
-    } finally {
-      setIsLoading(false);
     }
   }
 
   async function fetchAllMeals() {
     try {
-      setIsLoading(true);
       const allMeals = await mealsGetAll();
       const mealsByDate = (allMeals || []).reduce((acc, meal) => {
         const { date } = meal;

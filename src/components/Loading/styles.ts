@@ -6,7 +6,7 @@ export const Container = styled.View`
   justify-content: center;
   align-items: center;
 
-  background-color: ${theme.COLORS.GRAY_200};
+  background-color: ${theme.COLORS.WHITE};
 `;
 
 export const LoadIndicator = styled.ActivityIndicator.attrs({

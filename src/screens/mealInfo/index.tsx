@@ -1,7 +1,7 @@
-import { MealStorageDTO } from "@storage/meal/mealStorageDTO";
+import { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import { Header } from "@components/Header";
+import { MealStorageDTO } from "@storage/meal/mealStorageDTO";
 
 import {
   Container,
@@ -11,9 +11,12 @@ import {
   SecondTitle,
   ButtonsContainer,
 } from "./styles";
+
+import { Header } from "@components/Header";
 import { Pill } from "@components/Pill";
 import { Button } from "@components/Button";
 import { mealRemoveByDate } from "@storage/meal/mealRemoveByDate";
+import { Modal } from "@components/Modal";
 
 type RouteParams = {
   meal: MealStorageDTO;
@@ -24,8 +27,11 @@ export function MealInfo() {
   const navigation = useNavigation();
   const { meal } = route.params as RouteParams;
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   async function handleRemoveMeal() {
     await mealRemoveByDate(meal.name, meal.date);
+    await setModalVisible(!modalVisible);
     navigation.navigate("home");
   }
 
@@ -48,6 +54,12 @@ export function MealInfo() {
           text={meal.isInDiet ? "dentro da dieta" : "fora da dieta"}
         />
 
+        <Modal
+          modalVisible={modalVisible}
+          changeVisibilityFunction={() => setModalVisible(!modalVisible)}
+          onPressConfirm={handleRemoveMeal}
+        ></Modal>
+
         <ButtonsContainer>
           <Button
             title="Editar refeição"
@@ -58,7 +70,7 @@ export function MealInfo() {
             title="Excluir refeição"
             icon="DELETE"
             type="SECONDARY"
-            onPress={handleRemoveMeal}
+            onPress={() => setModalVisible(true)}
           />
         </ButtonsContainer>
       </InfoBackground>

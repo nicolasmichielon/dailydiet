@@ -6,6 +6,7 @@ export type ContainerBackgroundColorTypeProps = "PRIMARY" | "SECONDARY";
 
 type Props = {
   type: ContainerBackgroundColorTypeProps;
+  modalVisible: boolean;
 };
 
 export const Container = styled(SafeAreaView)`

@@ -15,6 +15,9 @@ export declare global {
       mealinfo: {
         meal: {};
       };
+      mealedit: {
+        meal: {};
+      };
     }
   }
 }

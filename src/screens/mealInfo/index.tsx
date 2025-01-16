@@ -49,7 +49,11 @@ export function MealInfo() {
         />
 
         <ButtonsContainer>
-          <Button title="Editar refeição" icon="EDIT" />
+          <Button
+            title="Editar refeição"
+            icon="EDIT"
+            onPress={() => navigation.navigate("mealedit", { meal: meal })}
+          />
           <Button
             title="Excluir refeição"
             icon="DELETE"
